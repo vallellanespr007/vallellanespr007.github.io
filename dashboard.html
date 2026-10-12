@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Placas Lopez</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1013;--card:#171a1f;--line:#262a31;--txt:#eef0f3;--mut:#8b929c;
+--sol:#f5b83d;--casa:#7aa7ff;--red:#e2675c;--exp:#4fc38a;--bat:#4fc38a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:28px 16px 48px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:22px}
+h1{margin:0;font-size:26px;letter-spacing:-.02em}
+.sub{color:var(--mut);font-size:13px;margin-top:4px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--exp);margin-right:6px;vertical-align:middle}
+.dot.off{background:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.lab{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)}
+.val{font-size:34px;font-weight:700;letter-spacing:-.03em;margin:8px 0 2px}
+.val small{font-size:15px;font-weight:500;color:var(--mut);margin-left:3px}
+.note{font-size:13px;color:var(--mut);min-height:18px}
+.bar{height:6px;background:var(--line);border-radius:4px;margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--bat);border-radius:4px;transition:width .6s}
+.sol .val{color:var(--sol)}.casa .val{color:var(--casa)}
+.mix{margin-top:12px}
+.mixbar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--line);margin:10px 0}
+.mixbar i{display:block;height:100%;transition:width .6s}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mut)}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+h2{font-size:15px;margin:28px 0 10px;color:var(--mut);font-weight:600}
+.today{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:760px){.today{grid-template-columns:repeat(2,1fr)}}
+.today .val{font-size:24px}
+.ctrl{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:760px){.ctrl{grid-template-columns:1fr}}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px;margin-top:12px}
+.seg button{flex:1;border:0;background:none;color:var(--mut);padding:10px;border-radius:7px;font:500 14px Inter,sans-serif;cursor:pointer}
+.seg button.on{background:var(--line);color:var(--txt)}
+input[type=range]{width:100%;margin-top:16px;accent-color:var(--bat)}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.btn{border:0;background:var(--casa);color:#0b1020;padding:9px 16px;border-radius:8px;font:600 14px Inter,sans-serif;cursor:pointer}
+.btn:disabled{opacity:.4;cursor:default}
+.err{background:#2a1517;border:1px solid #5a2a2e;color:#f1a7a0;padding:12px 14px;border-radius:10px;margin-bottom:14px;display:none;font-size:14px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--txt);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:600;font-size:14px;opacity:0;transition:.3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1 id="nombre">Placas Lopez</h1><div class="sub"><span class="dot" id="gdot"></span><span id="gtxt">Conectando…</span></div></div>
+    <div class="sub" id="hora"></div>
+  </header>
+  <div class="err" id="err"></div>
+
+  <div class="grid">
+    <div class="card sol"><div class="lab">Solar</div><div class="val" id="solar">–</div><div class="note" id="solarN"></div></div>
+    <div class="card casa"><div class="lab">Casa</div><div class="val" id="casa">–</div><div class="note">consumo ahora</div></div>
+    <div class="card"><div class="lab">LUMA</div><div class="val" id="red">–</div><div class="note" id="redN"></div></div>
+    <div class="card"><div class="lab">Powerwall ×2</div><div class="val" id="pct">–</div><div class="note" id="batN"></div><div class="bar"><i id="batBar" style="width:0"></i></div></div>
+  </div>
+
+  <div class="card mix">
+    <div class="lab">De dónde viene la energía de la casa ahora</div>
+    <div class="mixbar"><i id="mS" style="background:var(--sol)"></i><i id="mB" style="background:var(--bat)"></i><i id="mR" style="background:var(--red)"></i></div>
+    <div class="legend"><span><b style="background:var(--sol)"></b>Placas <span id="pS"></span></span><span><b style="background:var(--bat)"></b>Baterías <span id="pB"></span></span><span><b style="background:var(--red)"></b>LUMA <span id="pR"></span></span></div>
+  </div>
+
+  <div id="hoyBox" style="display:none">
+    <h2>Hoy</h2>
+    <div class="today">
+      <div class="card"><div class="lab">Producido</div><div class="val" id="tS">–</div></div>
+      <div class="card"><div class="lab">Consumido</div><div class="val" id="tC">–</div></div>
+      <div class="card"><div class="lab">Comprado a LUMA</div><div class="val" id="tI">–</div></div>
+      <div class="card"><div class="lab">Enviado a LUMA</div><div class="val" id="tE">–</div></div>
+      <div class="card"><div class="lab">De baterías</div><div class="val" id="tB">–</div></div>
+    </div>
+  </div>
+
+  <h2>Control</h2>
+  <div class="ctrl">
+    <div class="card">
+      <div class="lab">Modo de operación</div>
+      <div class="seg"><button data-m="self_consumption">Usar baterías primero</button><button data-m="autonomous">Automático Tesla</button></div>
+      <div class="note" style="margin-top:10px" id="modoN"></div>
+    </div>
+    <div class="card">
+      <div class="lab">Reserva para apagones</div>
+      <div class="row"><div class="val" style="margin:0" id="resV">–</div><button class="btn" id="resBtn" disabled>Guardar</button></div>
+      <input type="range" min="0" max="100" step="5" id="res">
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id), kw=w=>((w||0)/1000).toFixed(1);
+const MODOS={self_consumption:"La casa usa placas y baterías antes de comprarle a LUMA.",autonomous:"Tesla decide cuándo usar las baterías según la tarifa."};
+let reservaActual=null, editando=false;
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2500)}
+function unit(el,v,u){el.innerHTML=v+'<small>'+u+'</small>'}
+
+async function cargar(){
+  try{
+    const r=await fetch('/api/status'), d=await r.json();
+    if(!r.ok) throw new Error(d.error);
+    $('err').style.display='none';
+    const L=d.live, sol=L.solar_power||0, casa=L.load_power||0, red=L.grid_power||0, bat=L.battery_power||0;
+    if(d.nombre) $('nombre').textContent=d.nombre;
+    $('hora').textContent='Actualizado '+d.hora;
+    const ok=(L.grid_status||'').toLowerCase()!=='inactive';
+    $('gdot').className='dot'+(ok?'':' off'); $('gtxt').textContent=ok?'Conectado a LUMA':'Sin servicio de LUMA — en baterías';
+    unit($('solar'),kw(sol),'kW'); $('solarN').textContent=sol>50?'produciendo':'sin sol';
+    unit($('casa'),kw(casa),'kW');
+    unit($('red'),kw(Math.abs(red)),'kW'); $('redN').textContent=red>50?'comprando':red<-50?'enviando sobrante':'en balance';
+    const pct=Math.round(L.percentage_charged||0); unit($('pct'),pct,'%'); $('batBar').style.width=pct+'%';
+    $('batN').textContent=bat>50?'descargando '+kw(bat)+' kW':bat<-50?'cargando '+kw(-bat)+' kW':'en reposo';
+    const fS=Math.min(sol,casa), fB=Math.max(bat,0), fR=Math.max(red,0), tot=Math.max(fS+fB+fR,1);
+    [['mS','pS',fS],['mB','pB',fB],['mR','pR',fR]].forEach(([b,p,v])=>{const x=Math.round(v/tot*100);$(b).style.width=x+'%';$(p).textContent=x+'%'});
+    if(d.hoy){$('hoyBox').style.display='';[['tS','solar'],['tC','casa'],['tI','importado'],['tE','exportado'],['tB','bateria']].forEach(([i,k])=>unit($(i),d.hoy[k],'kWh'))}
+    document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.m===d.modo));
+    $('modoN').textContent=MODOS[d.modo]||'';
+    reservaActual=d.reserva;
+    if(!editando){$('res').value=d.reserva;$('resV').textContent=d.reserva+'%';$('resBtn').disabled=true}
+  }catch(e){$('err').textContent='No pude leer los datos: '+e.message;$('err').style.display='block'}
+}
+
+async function enviar(url,body,msg){
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json(); if(!r.ok){toast('Error: '+(d.error||r.status).toString().slice(0,80));return}
+  toast(msg); setTimeout(cargar,1500);
+}
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
+  if(b.classList.contains('on'))return;
+  if(confirm('¿Cambiar a "'+b.textContent+'"?')) enviar('/api/modo',{modo:b.dataset.m},'Modo cambiado');
+});
+$('res').oninput=e=>{editando=true;$('resV').textContent=e.target.value+'%';$('resBtn').disabled=+e.target.value===reservaActual};
+$('resBtn').onclick=()=>{editando=false;enviar('/api/reserva',{reserva:+$('res').value},'Reserva guardada en '+$('res').value+'%')};
+cargar(); setInterval(cargar,30000);
+</script>
+</body>
+</html>
