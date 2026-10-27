@@ -28,6 +28,12 @@
   --phone-b:#4A352D;
   --phone-edge:#2E211C;
   --phone-glass:#0D0908;
+  --amz-ink:#131A22;     /* Amazon zone: navy */
+  --amz-ink-2:#232F3E;
+  --amz-orange:#FF9900;
+  --amz-orange-2:#FFC266;
+  --amz-text:#F5F1EC;
+  --amz-muted:#B9C0C9;
   --font-sign:'Great Vibes','Snell Roundhand','Brush Script MT',cursive;
   --font-display:'Instrument Serif','Playfair Display',Georgia,serif;
   --font-body:'Manrope','Helvetica Neue',Arial,sans-serif;
@@ -245,6 +251,44 @@ img{max-width:100%;display:block}
 .svc-float img{width:100%;height:100%;object-fit:cover}
 @media(max-width:760px){.svc-head{grid-template-columns:1fr}.svc{grid-template-columns:auto 1fr}.svc p{grid-column:2;text-align:left}}
 
+/* ---------- amazon zone ---------- */
+@property --spin{syntax:'<angle>';inherits:false;initial-value:0deg}
+.amz{padding-block:clamp(40px,6vw,90px) clamp(80px,10vw,130px)}
+.amz-card{position:relative;isolation:isolate;border-radius:28px;padding:clamp(26px,4.5vw,64px);color:var(--amz-text);background:radial-gradient(120% 90% at 100% 0%,rgba(255,153,0,.22),transparent 55%),radial-gradient(80% 70% at 0% 100%,rgba(255,153,0,.10),transparent 60%),linear-gradient(160deg,var(--amz-ink-2),var(--amz-ink));display:grid;grid-template-columns:1.25fr .75fr;gap:clamp(28px,5vw,70px);align-items:center;overflow:hidden;transform:perspective(1400px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg));transition:transform .6s var(--ease)}
+.amz-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;background:conic-gradient(from var(--spin),transparent 0 62%,var(--amz-orange) 74%,var(--amz-orange-2) 80%,transparent 92%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spinb 5s linear infinite;z-index:-1;pointer-events:none}
+@keyframes spinb{to{--spin:360deg}}
+.amz-card>*{min-width:0}
+.amz-copy{display:flex;flex-direction:column;gap:20px}
+.amz-logo{display:inline-flex;flex-direction:column;align-items:flex-start;color:var(--amz-text);width:max-content}
+.amz-logo .word{font:800 clamp(2.6rem,6vw,4.4rem)/.9 'Helvetica Neue',Arial,sans-serif;letter-spacing:-.045em}
+.amz-logo svg{width:82%;height:auto;margin-top:-2px;margin-left:4%;overflow:visible}
+.amz-logo path{fill:none;stroke:var(--amz-orange);stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+.js-anim .amz-logo path{stroke-dasharray:200;stroke-dashoffset:200;transition:stroke-dashoffset 1.4s var(--ease) .35s}
+.js-anim .on .amz-logo path{stroke-dashoffset:0}
+.amz-kicker{font-size:.72rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--amz-orange)}
+.amz h2{margin:0;font-family:var(--font-display);font-weight:400;font-size:clamp(2.2rem,4.6vw,3.9rem);line-height:1.02;text-wrap:balance}
+.amz h2 em{color:var(--amz-orange-2)}
+.amz-copy p{margin:0;color:var(--amz-muted);max-width:46ch;font-size:1.02rem}
+.amz-tags{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.amz-tags li{padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);font-size:.76rem;font-weight:600;letter-spacing:.05em}
+.btn-amz{background:var(--amz-orange);color:var(--amz-ink);align-self:flex-start;box-shadow:0 12px 32px -10px rgba(255,153,0,.7)}
+.btn-amz::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:sheen 3.2s ease-in-out infinite}
+@keyframes sheen{0%,55%{left:-60%}100%{left:130%}}
+.btn-amz:hover{background:var(--amz-orange-2);box-shadow:0 18px 40px -10px rgba(255,153,0,.85)}
+.amz-disc{font-size:.72rem!important;color:var(--amz-muted)!important;opacity:.85}
+.amz-visual{position:relative;justify-self:center;width:min(100%,320px)}
+.amz-photo{position:relative;aspect-ratio:3/4;border-radius:22px;overflow:hidden;box-shadow:0 0 0 2px var(--amz-orange),0 30px 60px -20px rgba(0,0,0,.6)}
+.amz-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;transition:transform 1.2s var(--ease)}
+.amz-card:hover .amz-photo img{transform:scale(1.06)}
+.amz-float{position:absolute;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:14px;background:var(--amz-text);color:var(--amz-ink);font-size:.74rem;font-weight:700;letter-spacing:.04em;box-shadow:0 16px 34px -14px rgba(0,0,0,.55);animation:float 5.5s ease-in-out infinite;white-space:nowrap}
+.amz-float .dot{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--amz-orange);font-size:.7rem}
+.amz-float.f1{top:9%;left:-18%}
+.amz-float.f2{bottom:12%;right:-14%;animation-delay:-2.6s}
+.amz-cart{position:absolute;top:-22px;right:-16px;width:66px;height:66px;border-radius:50%;background:var(--amz-orange);color:var(--amz-ink);display:grid;place-items:center;box-shadow:0 14px 30px -10px rgba(255,153,0,.8);animation:bob 2.8s ease-in-out infinite}
+.amz-cart svg{width:30px;height:30px}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-8deg)}}
+@media(max-width:860px){.amz-card{grid-template-columns:1fr}.amz-visual{order:-1;width:min(70%,280px);margin-top:10px}.amz-float.f1{left:-10%}.amz-float.f2{right:-10%}}
+
 /* ---------- contact ---------- */
 .contact{position:relative;padding-block:clamp(80px,11vw,150px);overflow:hidden;background:var(--surface)}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,90px);align-items:start}
@@ -310,6 +354,7 @@ img{max-width:100%;display:block}
       <a href="#about" data-en="About" data-es="Sobre mí">About</a>
       <a href="#insights" data-en="Insights" data-es="Estadísticas">Insights</a>
       <a href="#portfolio" data-en="Portfolio" data-es="Portafolio">Portfolio</a>
+      <a href="#amazon">Amazon</a>
       <a href="#contact" class="keep" data-en="Contact" data-es="Contacto">Contact</a>
       <button class="lang" id="lang" type="button" aria-label="Cambiar a español"><span class="on" data-l="en">EN</span><span data-l="es">ES</span></button>
     </nav>
@@ -497,6 +542,34 @@ img{max-width:100%;display:block}
       </ul>
     </div>
     <div class="svc-float" id="svcFloat" aria-hidden="true"><img alt="" id="svcImg" src="assets/amanda-night.webp"></div>
+  </section>
+
+  <!-- AMAZON -->
+  <section class="amz" id="amazon">
+    <div class="wrap">
+      <div class="amz-card rv" id="amzCard">
+        <div class="amz-copy">
+          <a class="amz-logo" href="https://a.co/d/0j2xEvwC" target="_blank" rel="noopener sponsored" aria-label="Amazon">
+            <span class="word">amazon</span>
+            <svg viewBox="0 0 160 34" aria-hidden="true"><path d="M6 8 Q78 40 150 10"/><path d="M134 4 L151 10 L142 25"/></svg>
+          </a>
+          <span class="amz-kicker" data-en="Amanda's picks" data-es="Los favoritos de Amanda">Amanda's picks</span>
+          <h2><span data-en="Shop my" data-es="Compra mis">Shop my</span> <em data-en="Amazon finds." data-es="hallazgos en Amazon.">Amazon finds.</em></h2>
+          <p data-en="The beauty, fashion and everyday products Amanda uses and recommends, all in one place." data-es="Los productos de belleza, moda y del día a día que Amanda usa y recomienda, todos en un solo lugar.">The beauty, fashion and everyday products Amanda uses and recommends, all in one place.</p>
+          <ul class="amz-tags">
+            <li data-en="Beauty" data-es="Belleza">Beauty</li><li data-en="Fashion" data-es="Moda">Fashion</li><li>Lifestyle</li><li data-en="Travel" data-es="Viajes">Travel</li>
+          </ul>
+          <a class="btn btn-amz magnet" href="https://a.co/d/0j2xEvwC" target="_blank" rel="noopener sponsored"><span data-en="Shop on Amazon" data-es="Comprar en Amazon">Shop on Amazon</span> <span class="arr" aria-hidden="true">↗</span></a>
+          <p class="amz-disc" data-en="As an Amazon Associate, Amanda earns from qualifying purchases." data-es="Como Asociada de Amazon, Amanda gana con las compras que califican.">As an Amazon Associate, Amanda earns from qualifying purchases.</p>
+        </div>
+        <div class="amz-visual" aria-hidden="true">
+          <div class="amz-photo"><img src="assets/amanda-sofa.webp" alt="" width="960" height="1440" loading="lazy"></div>
+          <div class="amz-cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg></div>
+          <div class="amz-float f1"><span class="dot">✦</span><span data-en="Tried &amp; loved" data-es="Probado y amado">Tried &amp; loved</span></div>
+          <div class="amz-float f2"><span class="dot">♡</span><span data-en="Amanda's favorites" data-es="Favoritos de Amanda">Amanda's favorites</span></div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- CONTACT -->
@@ -753,6 +826,11 @@ img{max-width:100%;display:block}
     phone.style.setProperty('--ry',(-12+dx*46)+'deg'); phone.style.setProperty('--rx',(5-dy*22)+'deg'); phone.style.setProperty('--gx',(dx*70)+'%');
   });
   aboutSec.addEventListener('mouseleave',function(){ phoneHover=false; paintPhone(); });
+
+  /* ---- amazon card tilt ---- */
+  var amz=document.getElementById('amzCard');
+  amz.addEventListener('mousemove',function(e){ var r=amz.getBoundingClientRect(); amz.style.setProperty('--ty',(((e.clientX-r.left)/r.width-.5)*6)+'deg'); amz.style.setProperty('--tx',(-((e.clientY-r.top)/r.height-.5)*6)+'deg'); });
+  amz.addEventListener('mouseleave',function(){ amz.style.setProperty('--tx','0deg'); amz.style.setProperty('--ty','0deg'); });
 
   /* ---- magnetic buttons ---- */
   document.querySelectorAll('.magnet').forEach(function(b){
